@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MLN111 - Ôn tập Triết học</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MLN111 - Quiz Ôn tập v10</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
     <header class="app-header">
       <div class="brand-block">
         <span class="brand-kicker">MLN111 • Triết học Mác - Lênin</span>
-        <h1>Ôn tập theo 3 phần + đề scan</h1>
-        <p>Bấm đáp án là chấm ngay. App tự lưu trực tiếp trên trình duyệt bằng localStorage: lịch sử trả lời, câu đang học dở, trạng thái đúng/sai và tab DOCX scan.</p>
+        <h1>Ôn tập MLN111</h1>
+        <p>Giao diện v10: bấm đáp án là chấm ngay, phím 1-9/A-E để chọn, Enter/Space để qua câu tiếp sau khi đã trả lời. App tự nhớ vị trí học theo từng tab, bộ lọc và chủ đề.</p>
       </div>
       <div class="header-stats" aria-label="Tổng quan bộ câu hỏi">
         <div><strong id="totalQuestions">606</strong><span>Tổng câu</span></div>
@@ -32,98 +32,56 @@
       </div>
     </section>
 
-    <section class="layout-grid">
-      <aside class="sidebar">
-        <section class="side-panel">
-          <div class="panel-heading">
-            <span class="step-dot">1</span>
-            <h2>Chọn phần ôn</h2>
-          </div>
-          <div class="part-list" id="partList">
-            <button class="part-button" data-set="part1">
-              <span>PHẦN I</span>
-              <strong id="countPart1">0 câu</strong>
-              <small>Vấn đề chung & lịch sử triết học</small>
-            </button>
-            <button class="part-button" data-set="part2">
-              <span>PHẦN II</span>
-              <strong id="countPart2">0 câu</strong>
-              <small>Chủ nghĩa duy vật biện chứng</small>
-            </button>
-            <button class="part-button" data-set="part3">
-              <span>PHẦN III</span>
-              <strong id="countPart3">0 câu</strong>
-              <small>Chủ nghĩa duy vật lịch sử</small>
-            </button>
-            <button class="part-button exam-button" data-set="docx">
-              <span>ĐỀ SCAN DOCX</span>
-              <strong id="countDocx">0 câu</strong>
-              <small>Ôn riêng câu từ 3 đợt thi scan</small>
-            </button>
-            <button class="part-button compact" data-set="all">
-              <span>TỔNG HỢP</span>
-              <strong id="countAll">0 câu</strong>
-              <small>Luyện toàn bộ sau cùng</small>
-            </button>
-          </div>
-        </section>
+    <section class="part-tabs-panel">
+      <div class="section-title-row">
+        <div>
+          <span class="section-kicker">Bộ câu hỏi</span>
+          <h2>Chọn phần cần ôn</h2>
+        </div>
+      </div>
+      <div class="part-list" id="partList">
+        <button class="part-button" data-set="part1" type="button">
+          <span>PHẦN I</span>
+          <strong id="countPart1">0 câu</strong>
+          <small>Vấn đề chung & lịch sử triết học</small>
+        </button>
+        <button class="part-button" data-set="part2" type="button">
+          <span>PHẦN II</span>
+          <strong id="countPart2">0 câu</strong>
+          <small>Chủ nghĩa duy vật biện chứng</small>
+        </button>
+        <button class="part-button" data-set="part3" type="button">
+          <span>PHẦN III</span>
+          <strong id="countPart3">0 câu</strong>
+          <small>Chủ nghĩa duy vật lịch sử</small>
+        </button>
+        <button class="part-button exam-button" data-set="docx" type="button">
+          <span>ĐỀ SCAN DOCX</span>
+          <strong id="countDocx">0 câu</strong>
+          <small>Ôn riêng câu từ 3 đợt thi scan</small>
+        </button>
+        <button class="part-button compact" data-set="all" type="button">
+          <span>TỔNG HỢP</span>
+          <strong id="countAll">0 câu</strong>
+          <small>Luyện toàn bộ sau cùng</small>
+        </button>
+      </div>
+    </section>
 
-        <section class="side-panel">
-          <div class="panel-heading">
-            <span class="step-dot">2</span>
-            <h2>Bộ lọc nhanh</h2>
-          </div>
-          <div class="filter-stack" id="filterStack">
-            <button class="filter-pill active" data-filter="all">Tất cả</button>
-            <button class="filter-pill" data-filter="wrong">Câu sai</button>
-            <button class="filter-pill" data-filter="marked">Đánh dấu</button>
-            <button class="filter-pill" data-filter="answered">Đã trả lời</button>
-          </div>
-          <button id="shuffleBtn" class="full-btn">Đảo thứ tự câu</button>
-        </section>
-
-        <section class="side-panel progress-panel">
-          <div class="panel-heading">
-            <span class="step-dot">3</span>
-            <h2>Tiến độ</h2>
-          </div>
-          <div class="mini-stats">
-            <div><strong id="answeredCount">0</strong><span>Đã trả lời</span></div>
-            <div><strong id="correctCount">0</strong><span>Đúng</span></div>
-            <div><strong id="wrongCount">0</strong><span>Sai</span></div>
-            <div><strong id="markedCount">0</strong><span>Đánh dấu</span></div>
-          </div>
-          <button id="resetBtn" class="danger-light full-btn">Reset tiến độ</button>
-        </section>
-
-        <section class="side-panel storage-panel">
-          <div class="panel-heading">
-            <span class="step-dot">4</span>
-            <h2>Lưu trên trình duyệt</h2>
-          </div>
-          <p id="storageStatus" class="storage-status">Đang kiểm tra bộ nhớ trình duyệt...</p>
-          <div class="storage-actions">
-            <button id="exportProgressBtn" class="btn-light full-btn">Xuất tiến độ</button>
-            <button id="importProgressBtn" class="btn-light full-btn">Nhập tiến độ</button>
-            <input id="importProgressFile" type="file" accept="application/json,.json" hidden />
-          </div>
-          <small class="storage-note">Dữ liệu nằm trong trình duyệt của thiết bị này. Deploy Vercel không cần database.</small>
-        </section>
-      </aside>
-
+    <section class="workspace">
       <section class="study-main">
-        <section class="study-toolbar">
+        <section class="study-toolbar" aria-label="Điều khiển ôn tập">
           <div class="search-wrap">
             <label for="searchInput">Tìm kiếm</label>
-            <input id="searchInput" type="search" placeholder="Nhập từ khóa câu hỏi, đáp án hoặc chủ đề..." />
+            <input id="searchInput" type="search" placeholder="Nhập từ khóa câu hỏi hoặc đáp án..." autocomplete="off" />
           </div>
           <div class="select-wrap">
             <label for="topicSelect">Chủ đề nhỏ</label>
             <select id="topicSelect"><option value="all">Tất cả chủ đề</option></select>
           </div>
           <div class="mode-switch" aria-label="Chọn chế độ học">
-            <button class="mode-button active" data-mode="quiz">Trắc nghiệm</button>
-            <button class="mode-button" data-mode="flashcard">Flashcard</button>
+            <button class="mode-button active" data-mode="quiz" type="button">Trắc nghiệm</button>
+            <button class="mode-button" data-mode="flashcard" type="button">Flashcard</button>
           </div>
         </section>
 
@@ -135,7 +93,33 @@
           </div>
           <div class="counter-block">
             <span id="counterText">Câu 0/0</span>
-            <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+            <div class="progress-track" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+        </section>
+
+        <section class="shortcut-strip" aria-label="Phím tắt nhanh">
+          <strong>Phím tắt nhanh:</strong>
+          <span><kbd>1</kbd>-<kbd>9</kbd> hoặc <kbd>A</kbd>-<kbd>E</kbd> chọn đáp án</span>
+          <span><kbd>Enter</kbd>/<kbd>Space</kbd> sang câu tiếp sau khi đã chấm</span>
+          <span><kbd>←</kbd>/<kbd>→</kbd> lùi/tiến câu</span>
+          <span><kbd>R</kbd> chọn lại</span>
+          <span><kbd>F</kbd> đánh dấu</span>
+          <span><kbd>M</kbd> đã thuộc</span>
+          <span><kbd>/</kbd> tìm kiếm</span>
+        </section>
+
+        <section class="quick-guide-panel" aria-label="Hướng dẫn thao tác">
+          <div class="guide-card">
+            <strong>Trên máy tính</strong>
+            <p>Dùng <kbd>1</kbd>-<kbd>9</kbd> hoặc <kbd>A</kbd>-<kbd>E</kbd> để chọn đáp án. Sau khi hiện đúng/sai, nhấn <kbd>Enter</kbd> hoặc <kbd>Space</kbd> để qua câu tiếp theo.</p>
+          </div>
+          <div class="guide-card">
+            <strong>Trên điện thoại</strong>
+            <p>Chạm vào đáp án để chấm ngay. Với câu nhiều đáp án, chạm đủ số phương án được yêu cầu; sau đó bấm nút <b>Tiếp tục →</b> ở cuối màn hình.</p>
+          </div>
+          <div class="guide-card">
+            <strong>Không mất vị trí học</strong>
+            <p>Khi chuyển sang Câu sai, Đề scan DOCX hoặc bộ lọc khác, app lưu vị trí riêng cho từng phạm vi để quay lại đúng câu đang ôn.</p>
           </div>
         </section>
 
@@ -146,6 +130,7 @@
           </div>
           <h2 id="quizQuestion">Đang tải câu hỏi...</h2>
           <p id="multiHint" class="multi-hint hidden"></p>
+          <p id="actionHint" class="action-hint"></p>
           <div id="options" class="option-grid"></div>
           <p id="feedback" class="feedback" aria-live="polite"></p>
         </article>
@@ -162,32 +147,60 @@
           </div>
         </article>
 
-        <nav class="study-actions">
-          <button id="prevBtn" class="btn-light">← Trước</button>
-          <button id="retryBtn" class="btn-light hidden">Chọn lại</button>
-          <button id="flagBtn" class="btn-light">Đánh dấu</button>
-          <button id="markBtn" class="btn-light">Đã thuộc</button>
-          <button id="nextBtn">Tiếp →</button>
+        <nav class="study-actions" aria-label="Điều hướng câu hỏi">
+          <button id="prevBtn" class="btn-light" type="button">← Trước</button>
+          <button id="retryBtn" class="btn-light hidden" type="button">Chọn lại</button>
+          <button id="flagBtn" class="btn-light" type="button">Đánh dấu</button>
+          <button id="markBtn" class="btn-light hide-sm" type="button">Đã thuộc</button>
+          <button id="nextBtn" class="primary-next" type="button">Tiếp →</button>
         </nav>
-
-        <section class="detail-grid">
-          <details id="historyDetails" class="detail-card">
-            <summary>
-              <span>Lịch sử trả lời</span>
-              <small id="historySummary">0 lượt</small>
-            </summary>
-            <div id="historyList" class="history-list"></div>
-          </details>
-
-          <details class="detail-card">
-            <summary>
-              <span>Danh sách câu trong phạm vi hiện tại</span>
-              <small id="listCount">0 câu</small>
-            </summary>
-            <div id="questionList" class="question-list"></div>
-          </details>
-        </section>
       </section>
+
+      <aside class="study-aside">
+        <section class="side-panel filter-panel">
+          <div class="panel-heading"><span class="step-dot">1</span><h2>Bộ lọc nhanh</h2></div>
+          <div class="filter-stack" id="filterStack">
+            <button class="filter-pill active" data-filter="all" type="button">Tất cả</button>
+            <button class="filter-pill" data-filter="wrong" type="button">Câu sai</button>
+            <button class="filter-pill" data-filter="marked" type="button">Đánh dấu</button>
+            <button class="filter-pill" data-filter="answered" type="button">Đã trả lời</button>
+          </div>
+          <button id="shuffleBtn" class="full-btn" type="button">Đảo thứ tự câu</button>
+        </section>
+
+        <section class="side-panel progress-panel">
+          <div class="panel-heading"><span class="step-dot">2</span><h2>Tiến độ</h2></div>
+          <div class="mini-stats">
+            <div><strong id="answeredCount">0</strong><span>Đã trả lời</span></div>
+            <div><strong id="correctCount">0</strong><span>Đúng</span></div>
+            <div><strong id="wrongCount">0</strong><span>Sai</span></div>
+            <div><strong id="markedCount">0</strong><span>Đánh dấu</span></div>
+          </div>
+          <button id="resetBtn" class="danger-light full-btn" type="button">Reset tiến độ</button>
+        </section>
+
+        <section class="side-panel storage-panel">
+          <div class="panel-heading"><span class="step-dot">3</span><h2>Lưu trên trình duyệt</h2></div>
+          <p id="storageStatus" class="storage-status">Đang kiểm tra bộ nhớ trình duyệt...</p>
+          <div class="storage-actions">
+            <button id="exportProgressBtn" class="btn-light full-btn" type="button">Xuất tiến độ</button>
+            <button id="importProgressBtn" class="btn-light full-btn" type="button">Nhập tiến độ</button>
+            <input id="importProgressFile" type="file" accept="application/json,.json" hidden />
+          </div>
+          <small class="storage-note">LocalStorage lưu theo trình duyệt, thiết bị và domain Vercel hiện tại.</small>
+        </section>
+      </aside>
+    </section>
+
+    <section class="detail-grid">
+      <details id="historyDetails" class="detail-card">
+        <summary><span>Lịch sử trả lời</span><small id="historySummary">0 lượt</small></summary>
+        <div id="historyList" class="history-list"></div>
+      </details>
+      <details class="detail-card">
+        <summary><span>Danh sách câu trong phạm vi hiện tại</span><small id="listCount">0 câu</small></summary>
+        <div id="questionList" class="question-list"></div>
+      </details>
     </section>
   </main>
 

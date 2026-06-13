@@ -1,9 +1,6 @@
 {
-  "name": "mln111-browser-study-app",
-  "version": "7.0.0",
-  "private": true,
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp index.html style.css app.js questions_by_part.json summary.json dist/",
-    "start": "python3 -m http.server 3000"
-  }
+    "build": "mkdir -p dist && cp index.html style.css app.js dist/"
+  },
+  "devDependencies": {}
 }
