@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MLN111 - Ôn tập Triết học</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <span class="brand-kicker">MLN111 • Triết học Mác - Lênin</span>
+        <h1>Ôn tập theo 3 phần + đề scan</h1>
+        <p>Bấm đáp án là chấm ngay. App tự lưu trực tiếp trên trình duyệt bằng localStorage: lịch sử trả lời, câu đang học dở, trạng thái đúng/sai và tab DOCX scan.</p>
+      </div>
+      <div class="header-stats" aria-label="Tổng quan bộ câu hỏi">
+        <div><strong id="totalQuestions">606</strong><span>Tổng câu</span></div>
+        <div><strong id="answeredCountTop">0</strong><span>Đã làm</span></div>
+        <div><strong id="wrongCountTop">0</strong><span>Cần ôn</span></div>
+      </div>
+    </header>
+
+    <section id="resumeBanner" class="resume-banner hidden">
+      <div>
+        <strong>Đã khôi phục phiên ôn tập gần nhất</strong>
+        <p id="resumeText">Bạn có thể tiếp tục từ câu đang học dở.</p>
+      </div>
+      <div class="resume-actions">
+        <button id="resumeBtn">Ôn tiếp</button>
+        <button id="clearSessionBtn" class="btn-light">Bắt đầu lại</button>
+      </div>
+    </section>
+
+    <section class="layout-grid">
+      <aside class="sidebar">
+        <section class="side-panel">
+          <div class="panel-heading">
+            <span class="step-dot">1</span>
+            <h2>Chọn phần ôn</h2>
+          </div>
+          <div class="part-list" id="partList">
+            <button class="part-button" data-set="part1">
+              <span>PHẦN I</span>
+              <strong id="countPart1">0 câu</strong>
+              <small>Vấn đề chung & lịch sử triết học</small>
+            </button>
+            <button class="part-button" data-set="part2">
+              <span>PHẦN II</span>
+              <strong id="countPart2">0 câu</strong>
+              <small>Chủ nghĩa duy vật biện chứng</small>
+            </button>
+            <button class="part-button" data-set="part3">
+              <span>PHẦN III</span>
+              <strong id="countPart3">0 câu</strong>
+              <small>Chủ nghĩa duy vật lịch sử</small>
+            </button>
+            <button class="part-button exam-button" data-set="docx">
+              <span>ĐỀ SCAN DOCX</span>
+              <strong id="countDocx">0 câu</strong>
+              <small>Ôn riêng câu từ 3 đợt thi scan</small>
+            </button>
+            <button class="part-button compact" data-set="all">
+              <span>TỔNG HỢP</span>
+              <strong id="countAll">0 câu</strong>
+              <small>Luyện toàn bộ sau cùng</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="side-panel">
+          <div class="panel-heading">
+            <span class="step-dot">2</span>
+            <h2>Bộ lọc nhanh</h2>
+          </div>
+          <div class="filter-stack" id="filterStack">
+            <button class="filter-pill active" data-filter="all">Tất cả</button>
+            <button class="filter-pill" data-filter="wrong">Câu sai</button>
+            <button class="filter-pill" data-filter="marked">Đánh dấu</button>
+            <button class="filter-pill" data-filter="answered">Đã trả lời</button>
+          </div>
+          <button id="shuffleBtn" class="full-btn">Đảo thứ tự câu</button>
+        </section>
+
+        <section class="side-panel progress-panel">
+          <div class="panel-heading">
+            <span class="step-dot">3</span>
+            <h2>Tiến độ</h2>
+          </div>
+          <div class="mini-stats">
+            <div><strong id="answeredCount">0</strong><span>Đã trả lời</span></div>
+            <div><strong id="correctCount">0</strong><span>Đúng</span></div>
+            <div><strong id="wrongCount">0</strong><span>Sai</span></div>
+            <div><strong id="markedCount">0</strong><span>Đánh dấu</span></div>
+          </div>
+          <button id="resetBtn" class="danger-light full-btn">Reset tiến độ</button>
+        </section>
+
+        <section class="side-panel storage-panel">
+          <div class="panel-heading">
+            <span class="step-dot">4</span>
+            <h2>Lưu trên trình duyệt</h2>
+          </div>
+          <p id="storageStatus" class="storage-status">Đang kiểm tra bộ nhớ trình duyệt...</p>
+          <div class="storage-actions">
+            <button id="exportProgressBtn" class="btn-light full-btn">Xuất tiến độ</button>
+            <button id="importProgressBtn" class="btn-light full-btn">Nhập tiến độ</button>
+            <input id="importProgressFile" type="file" accept="application/json,.json" hidden />
+          </div>
+          <small class="storage-note">Dữ liệu nằm trong trình duyệt của thiết bị này. Deploy Vercel không cần database.</small>
+        </section>
+      </aside>
+
+      <section class="study-main">
+        <section class="study-toolbar">
+          <div class="search-wrap">
+            <label for="searchInput">Tìm kiếm</label>
+            <input id="searchInput" type="search" placeholder="Nhập từ khóa câu hỏi, đáp án hoặc chủ đề..." />
+          </div>
+          <div class="select-wrap">
+            <label for="topicSelect">Chủ đề nhỏ</label>
+            <select id="topicSelect"><option value="all">Tất cả chủ đề</option></select>
+          </div>
+          <div class="mode-switch" aria-label="Chọn chế độ học">
+            <button class="mode-button active" data-mode="quiz">Trắc nghiệm</button>
+            <button class="mode-button" data-mode="flashcard">Flashcard</button>
+          </div>
+        </section>
+
+        <section class="current-bar">
+          <div>
+            <span id="partBadge" class="blue-badge">PHẦN I</span>
+            <strong id="currentTitle">PHẦN I</strong>
+            <p id="currentDesc">0 câu</p>
+          </div>
+          <div class="counter-block">
+            <span id="counterText">Câu 0/0</span>
+            <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+        </section>
+
+        <article id="quizCard" class="question-card">
+          <div class="question-meta">
+            <span id="topicBadge" class="topic-chip">Chủ đề</span>
+            <span id="lastResultBadge" class="last-result hidden">Lần gần nhất</span>
+          </div>
+          <h2 id="quizQuestion">Đang tải câu hỏi...</h2>
+          <p id="multiHint" class="multi-hint hidden"></p>
+          <div id="options" class="option-grid"></div>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </article>
+
+        <article id="flashcard" class="question-card flashcard hidden" tabindex="0" role="button" aria-label="Nhấn để lật thẻ">
+          <div class="question-meta">
+            <span id="flashTopicBadge" class="topic-chip">Chủ đề</span>
+            <span class="hint-chip">Nhấn vào thẻ để lật</span>
+          </div>
+          <h2 id="cardQuestion">Đang tải câu hỏi...</h2>
+          <div id="cardBack" class="card-back hidden">
+            <span>Đáp án đúng</span>
+            <strong id="cardAnswer"></strong>
+          </div>
+        </article>
+
+        <nav class="study-actions">
+          <button id="prevBtn" class="btn-light">← Trước</button>
+          <button id="retryBtn" class="btn-light hidden">Chọn lại</button>
+          <button id="flagBtn" class="btn-light">Đánh dấu</button>
+          <button id="markBtn" class="btn-light">Đã thuộc</button>
+          <button id="nextBtn">Tiếp →</button>
+        </nav>
+
+        <section class="detail-grid">
+          <details id="historyDetails" class="detail-card">
+            <summary>
+              <span>Lịch sử trả lời</span>
+              <small id="historySummary">0 lượt</small>
+            </summary>
+            <div id="historyList" class="history-list"></div>
+          </details>
+
+          <details class="detail-card">
+            <summary>
+              <span>Danh sách câu trong phạm vi hiện tại</span>
+              <small id="listCount">0 câu</small>
+            </summary>
+            <div id="questionList" class="question-list"></div>
+          </details>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
