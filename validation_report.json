@@ -1,5 +1,11 @@
 {
-  "question_count": 606,
-  "correction_count": 146,
-  "validation_issues": []
+  "version": "v13-ui-redesign",
+  "questions": 606,
+  "multi_answer": 6,
+  "docx_scan": 146,
+  "notes": [
+    "Vị trí câu hỏi đặt trong question card header",
+    "Lịch sử sai dùng hint trung tính, không dùng màu active",
+    "Feedback slot cố định để giảm layout shift"
+  ]
 }
